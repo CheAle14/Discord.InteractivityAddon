@@ -189,15 +189,16 @@ namespace Interactivity
                 await actions.Invoke(reaction, false).ConfigureAwait(false);
                 reactionSource.SetResult(new InteractivityResult<SocketReaction>(reaction, DateTime.UtcNow - startTime, false, false));
             }
-            async Task HandleReactionAsync(Cacheable<IUserMessage, ulong> m, ISocketMessageChannel c, SocketReaction r)
+            // Cacheable<IUserMessage, ulong>, Cacheable<IMessageChannel, ulong>, SocketReaction
+            async Task HandleReactionAsync(Cacheable<IUserMessage, ulong> m, Cacheable<IMessageChannel, ulong> cd, SocketReaction r)
             {
                 if (runOnGateway ?? RunOnGateway)
                 {
-                    await CheckReactionAsync(m, c, r);
+                    await CheckReactionAsync(m, (await cd.GetOrDownloadAsync()) as ISocketMessageChannel, r);
                 }
                 else
                 {
-                    _ = Task.Run(() => CheckReactionAsync(m, c, r));
+                    _ = Task.Run(() => CheckReactionAsync(m, (cd.GetOrDownloadAsync().Result) as ISocketMessageChannel, r));
                 }
             }
 
@@ -354,15 +355,15 @@ namespace Interactivity
                     confirmationSource.SetResult(new InteractivityResult<bool>(false, DateTime.UtcNow - startTime, false, true));
                 }
             }
-            async Task HandleReactionAsync(Cacheable<IUserMessage, ulong> m, ISocketMessageChannel c, SocketReaction r)
+            async Task HandleReactionAsync(Cacheable<IUserMessage, ulong> m, Cacheable<IMessageChannel, ulong> cd, SocketReaction r)
             {
                 if (runOnGateway ?? RunOnGateway)
                 {
-                    await CheckReactionAsync(m, c, r);
+                    await CheckReactionAsync(m, (await cd.GetOrDownloadAsync()) as ISocketMessageChannel, r);
                 }
                 else
                 {
-                    _ = Task.Run(() => CheckReactionAsync(m, c, r));
+                    _ = Task.Run(() => CheckReactionAsync(m, (cd.GetOrDownloadAsync().Result) as ISocketMessageChannel, r));
                 }
             }
 
@@ -478,15 +479,15 @@ namespace Interactivity
 
                 selectionSource.SetResult(result);
             }
-            async Task HandleReactionAsync(Cacheable<IUserMessage, ulong> m, ISocketMessageChannel c, SocketReaction r)
+            async Task HandleReactionAsync(Cacheable<IUserMessage, ulong> m, Cacheable<IMessageChannel, ulong> cd, SocketReaction r)
             {
                 if (runOnGateway ?? RunOnGateway)
                 {
-                    await CheckReactionAsync(m, c, r);
+                    await CheckReactionAsync(m, (await cd.GetOrDownloadAsync()) as ISocketMessageChannel, r);
                 }
                 else
                 {
-                    _ = Task.Run(() => CheckReactionAsync(m, c, r));
+                    _ = Task.Run(() => CheckReactionAsync(m, (cd.GetOrDownloadAsync().Result) as ISocketMessageChannel, r));
                 }
             }
 
@@ -702,15 +703,15 @@ namespace Interactivity
                     await message.ModifyAsync(x => { x.Embed = page.Embed; x.Content = page.Text; }).ConfigureAwait(false);
                 }
             }
-            async Task HandleReactionAsync(Cacheable<IUserMessage, ulong> m, ISocketMessageChannel c, SocketReaction r)
+            async Task HandleReactionAsync(Cacheable<IUserMessage, ulong> m, Cacheable<IMessageChannel, ulong> cd, SocketReaction r)
             {
                 if (runOnGateway ?? RunOnGateway)
                 {
-                    await CheckReactionAsync(m, c, r);
+                    await CheckReactionAsync(m, (await cd.GetOrDownloadAsync()) as ISocketMessageChannel, r);
                 }
                 else
                 {
-                    _ = Task.Run(() => CheckReactionAsync(m, c, r));
+                    _ = Task.Run(() => CheckReactionAsync(m, (cd.GetOrDownloadAsync().Result) as ISocketMessageChannel, r));
                 }
             }
 
